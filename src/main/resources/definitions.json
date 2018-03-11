@@ -1,0 +1,35 @@
+{
+  "definitions": {
+    "address": {
+      "attributes": {
+        "row_id": "regex.id_cloe",
+        "city": "faker.city",
+        "building": "faker.building",
+        "postal_code": "faker.zip_code",
+        "address": "faker.street"
+      }
+    },
+    "account": {
+      "attributes": {
+        "row_id": "regex.id_cloe",
+        "par_addr_id": "regex.id_cloe",
+        "x_niveau": "enum.account_level"
+      }
+    }
+  },
+  "groups": {
+    "account": {
+      "objects": {
+        "address": {
+          "count": 1
+        },
+        "account": {
+          "count": 1
+        }
+      },
+      "overrides": {
+        "address.row_id": "account.par_addr_id"
+      }
+    }
+  }
+}
