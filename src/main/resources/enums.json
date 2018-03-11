@@ -1,0 +1,12 @@
+{
+  "enums": [
+    {
+      "id": "account_level",
+      "values": [
+        "Tête de Groupe",
+        "Profil de Facturation",
+        "Site"
+      ]
+    }
+  ]
+}

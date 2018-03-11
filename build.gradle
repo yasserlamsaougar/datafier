@@ -3,7 +3,12 @@ version '1.0-SNAPSHOT'
 
 buildscript {
     ext.kotlin_version = '1.2.30'
-
+    ext.lucene_version = '7.2.1'
+    ext.reflections_version = '0.9.11'
+    ext.klaxon_version = '2.1.10'
+    ext.javafaker_version = '0.14'
+    ext.generex_version = '1.0.2'
+    ext.textio_version = '3.1.3'
     repositories {
         mavenCentral()
     }
@@ -22,10 +27,15 @@ repositories {
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     compile group: 'org.jetbrains.kotlin', name: 'kotlin-reflect', version: "$kotlin_version"
-    compile 'com.beust:klaxon:2.1.10'
-    compile group: 'com.github.javafaker', name: 'javafaker', version: '0.14'
-    compile 'com.github.mifmif:generex:1.0.2'
-    compile 'org.reflections:reflections:0.9.11'
+    compile "com.beust:klaxon:$klaxon_version"
+    compile group: 'com.github.javafaker', name: 'javafaker', version: "$javafaker_version"
+    compile "com.github.mifmif:generex:$generex_version"
+    compile "org.reflections:reflections:$reflections_version"
+    compile group: 'org.apache.lucene', name: 'lucene-core', version: "$lucene_version"
+    compile group: 'org.apache.lucene', name: 'lucene-suggest', version: "$lucene_version"
+    compile "org.beryx:text-io:$textio_version"
+
+
 }
 
 compileKotlin {

@@ -1,20 +1,22 @@
 package functions
 
+import utilities.JsonReaderUtil
 import java.util.*
 
-class EnumFunctions : AbstractFunctions() {
+class EnumFunctions(enumPath: String) : Functions {
 
-    val enumMap = mapOf(
-            "accountLevel" to listOf(
-                    "Profil de Facturation",
-                    "Tête de Groupe",
-                    "Site"
-            )
-    )
+    private val functions: Map<String, () -> String>
+    init {
+        val list = JsonReaderUtil.readFile<EnumObjectList>(enumPath)
+        functions = list.enums.map {
+            it.id to {
+                it.values.random()
+            }
+        }.toMap()
 
-    @Generator("account_level")
-    fun accountLevel(): String {
-        return enumMap.getValue("accountLevel").random()
+    }
+    override fun apply(id: String): String {
+        return functions.getValue(id)()
     }
 
 
@@ -22,4 +24,6 @@ class EnumFunctions : AbstractFunctions() {
         val random = Random()
         return this[random.nextInt(this.size)]
     }
+    data class EnumObjectList(val enums: List<EnumObject>)
+    data class EnumObject(val id: String, val values: List<String>)
 }

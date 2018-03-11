@@ -1,3 +1,5 @@
+package utilities
+
 object ExtractUtils {
     fun <T> Map<String, Any>.getPath(path: String): T? {
         val split = path.split('.')

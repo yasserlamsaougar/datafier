@@ -1,15 +1,24 @@
 package functions
 
 import com.mifmif.common.regex.Generex
+import utilities.JsonReaderUtil
 
-class RegexFunctions : AbstractFunctions() {
+class RegexFunctions(regexpsPath: String) : Functions {
 
-    val regexMap = mapOf(
-            "cloeId" to Generex("1-[0-9A-Z]{5,10}")
-    )
+    private val functions: Map<String, Generex>
 
-    @Generator("id_cloe")
-    fun cloeId() : String {
-        return regexMap.getValue("cloeId").random()
+    init {
+        val list = JsonReaderUtil.readFile<RegexList>(regexpsPath)
+        functions = list.regexps.map {
+            it.id to Generex(it.regex)
+        }.toMap()
+
     }
+
+    override fun apply(id: String): String {
+        return functions.getValue(id).random()
+    }
+
+    data class RegexList(val regexps: List<RegexObject>)
+    data class RegexObject(val id: String, val regex: String)
 }

@@ -1,13 +1,19 @@
-import com.beust.klaxon.Klaxon
+package main
+
 import functions.EnumFunctions
 import functions.FakerFunctions
-import functions.Functions
 import functions.RegexFunctions
-import java.io.File
-import ExtractUtils.getPath
-import ExtractUtils.setPath
+import model.Definitions
+import model.Definitions.Definition
+import model.Definitions.DefinitionTree
+import utilities.CombinationUtils
+import utilities.ExtractUtils.getPath
+import utilities.ExtractUtils.setPath
+import utilities.JsonReaderUtil
+import kotlin.system.measureNanoTime
+import kotlin.system.measureTimeMillis
 
-val generators = mapOf<String, Functions>(
+val generators = mapOf(
         "regex" to RegexFunctions(),
         "faker" to FakerFunctions(),
         "enum" to EnumFunctions()
@@ -15,9 +21,7 @@ val generators = mapOf<String, Functions>(
 
 fun main(args: Array<String>) {
 
-    val klaxon = Klaxon()
-    val definitionTree = klaxon.parse<DefinitionTree>(File("src/main/resources/definitions.json"))!!
-
+    val definitionTree = JsonReaderUtil.readFile<DefinitionTree>("src/main/resources/definitions.json")
 
     val groups = definitionTree.groups
 
@@ -34,6 +38,15 @@ fun main(args: Array<String>) {
         definitions
     }
     println(result)
+    val destructuredRegex = "generate\\s+([a-zA-Z_]+)\\s+as\\s+([a-zA-Z_]+)".toRegex()
+    val text = "generate  account as  idr"
+    destructuredRegex.matchEntire(text)
+            ?.destructured
+            ?.let { (groupId, formatId) ->
+                println("$groupId as $formatId")
+            }
+            ?: throw IllegalArgumentException("Bad input '$text'")
+
 }
 
 fun generate(definition: Definition): MutableMap<String, String> {
@@ -59,10 +72,13 @@ fun resolveOverrides(data: Map<String, List<MutableMap<String, String>>>, target
     }
 }
 
-data class Definition(val attributes: Map<String, String> = emptyMap())
+fun mergeDefinitions(trees: List<DefinitionTree>): DefinitionTree {
+    val mergedDefinitions = mutableMapOf<String, Definition>()
+    val mergedGroups = mutableMapOf<String, Definitions.Group>()
+    trees.forEach {
+        mergedDefinitions.putAll(it.definitions)
+        mergedGroups.putAll(it.groups)
+    }
+    return DefinitionTree(definitions = mergedDefinitions, groups = mergedGroups)
+}
 
-data class GroupObject(val count: Int = 1, val mandatory: Boolean = false)
-
-data class Group(val objects: Map<String, GroupObject> = emptyMap(), val overrides: Map<String, String> = emptyMap())
-
-data class DefinitionTree(val definitions: Map<String, Definition>, val groups: Map<String, Group>)
