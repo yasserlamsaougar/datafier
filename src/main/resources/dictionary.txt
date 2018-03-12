@@ -1,1 +1,2 @@
+generate s_org_ext_fnx as idr
 generate account as idr

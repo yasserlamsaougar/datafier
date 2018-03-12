@@ -2,7 +2,10 @@ package functions
 
 import com.github.javafaker.Faker
 import org.reflections.ReflectionUtils
+import java.text.SimpleDateFormat
+import java.time.Instant
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 class FakerFunctions : Functions {
 
@@ -43,6 +46,16 @@ class FakerFunctions : Functions {
     @Generator("street")
     fun street(): String {
         return faker.address().streetAddress()
+    }
+
+    @Generator("landlord")
+    fun landlord() : String {
+        return faker.address().lastName()
+    }
+
+    @Generator("full_address")
+    fun fullAdresse() : String {
+        return faker.address().fullAddress()
     }
 
     @Generator("building")
@@ -88,6 +101,21 @@ class FakerFunctions : Functions {
     @Generator("credit_card")
     fun index(): String {
         return faker.finance().creditCard()
+    }
+
+    @Generator("boolean")
+    fun boolean(): String {
+        return faker.bool().bool().toString()
+    }
+
+    @Generator("date")
+    fun date(): String {
+        return SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(faker.date().past(faker.number().numberBetween(0, 604800), TimeUnit.SECONDS))
+    }
+
+    @Generator("number")
+    fun number(): String {
+        return faker.number().numberBetween(0, Int.MAX_VALUE).toString(10)
     }
 
 }

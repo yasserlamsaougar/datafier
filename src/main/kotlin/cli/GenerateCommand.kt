@@ -10,12 +10,14 @@ import utilities.CombinationUtils
 import utilities.ExtractUtils.getPath
 import utilities.ExtractUtils.setPath
 import utilities.FileUtils
+import java.nio.file.Paths
+import java.util.*
 
 class GenerateCommand(treeDefinition: DefinitionTree, val formatters: Map<String, Formatter>, val generators: Map<String, Functions>) : Command {
 
     override val treeDefinition = treeDefinition
     private val destructuringRegex = "generate\\s+([a-zA-Z_]+)\\s+as\\s+([a-zA-Z_]+)".toRegex()
-
+    private val outputDir = "generated_data"
     override fun launch(command: String, textIO: TextIO, suggester: CommandSuggester) {
         val terminal = textIO.textTerminal
         destructuringRegex.matchEntire(command)
@@ -29,8 +31,32 @@ class GenerateCommand(treeDefinition: DefinitionTree, val formatters: Map<String
                     if (!success) {
                         terminal.printf("did you mean %s\n", suggester.suggest(command, 1).first())
                     }
+                    else {
+                        terminal.println("File generated from $groupId containing $howMany group elements")
+                        val path = Paths.get("$outputDir/$groupId.json").toAbsolutePath().toString()
+                        terminal.println("Path to file : $path")
+                    }
                 }
                 ?: terminal.printf("did you mean %s\n", suggester.suggest(command, 1).first())
+    }
+
+    override fun launchInteractive(command: String, textIO: TextIO) {
+        val terminal = textIO.textTerminal
+        val groupId = textIO.newStringInputReader().
+                withNumberedPossibleValues(treeDefinition.groups.keys.toList()).
+                read("Choose group")
+        val formatId = textIO.newStringInputReader().
+                withNumberedPossibleValues(formatters.keys.toList()).
+                read("Choose formatter")
+        val howMany = textIO.newIntInputReader()
+                .withMinVal(1)
+                .withDefaultValue(1)
+                .read("How many ?")
+        generate(groupId, formatId, howMany)
+        terminal.println("File generated from $groupId containing $howMany group elements")
+        val path = Paths.get("$outputDir/$groupId.json").toAbsolutePath().toString()
+        terminal.println("Path to file : $path")
+
     }
 
 
@@ -51,8 +77,11 @@ class GenerateCommand(treeDefinition: DefinitionTree, val formatters: Map<String
             try {
                 val content = (0 until count).flatMap {
                     val data = group.objects.map {
+                        val random = Random()
                         val definition = treeDefinition.definitions[it.key]!!
-                        val generatedData = (0 until it.value.count).map {
+                        val randomCount = random.nextInt(it.value.count + 1)
+                        val newCount = if(it.value.mandatory && randomCount == 0) randomCount + 1 else randomCount
+                        val generatedData = (0 until newCount).map {
                             generate(definition)
                         }
                         it.key to generatedData
@@ -68,8 +97,9 @@ class GenerateCommand(treeDefinition: DefinitionTree, val formatters: Map<String
                         }
                     }
                 }.joinToString("\n")
-                FileUtils.writeFile("generated_data/$groupId.json", content)
+                FileUtils.writeFile("$outputDir/$groupId.json", content)
             } catch (e: Exception) {
+                e.printStackTrace()
                 return false
             }
             return true
@@ -80,9 +110,13 @@ class GenerateCommand(treeDefinition: DefinitionTree, val formatters: Map<String
     private fun generate(definition: Definition): MutableMap<String, String> {
         return definition.attributes.mapValues {
             val splitValue = it.value.split('.')
-            val randomStrategy = splitValue.first()
-            val randomFunction = splitValue.last()
-            generators.getValue(randomStrategy).apply(randomFunction)
+            if (splitValue.size < 2) {
+                ""
+            } else {
+                val randomStrategy = splitValue.first()
+                val randomFunction = splitValue.last()
+                generators.getValue(randomStrategy).apply(randomFunction)
+            }
         }.toMutableMap()
     }
 
@@ -96,7 +130,9 @@ class GenerateCommand(treeDefinition: DefinitionTree, val formatters: Map<String
         val def = data.getValue(objectKey)
         val sourceDef = data.getValue(sourceKey)
         def.forEach {
-            it.setPath(path, sourceDef.first().getPath<String>(sourcePath)!!)
+            if(sourceDef.isNotEmpty()) {
+                it.setPath(path, sourceDef.first().getPath<String>(sourcePath)!!)
+            }
         }
     }
 }

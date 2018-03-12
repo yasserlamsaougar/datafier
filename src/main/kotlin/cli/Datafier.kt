@@ -34,10 +34,16 @@ class Datafier {
         while (true) {
             val command = textIO.newStringInputReader()
                     .read("command")
-            val commandKey = command.split(' ').first()
+            val commandSplit = command.split(' ')
+            val commandKey = commandSplit.first()
             val commandObject = commands[commandKey]
             if(commandObject != null) {
-                commandObject.launch(command, textIO, commandSuggester)
+                if(commandSplit.size == 1) {
+                    commandObject.launchInteractive(command, textIO)
+                }
+                else {
+                    commandObject.launch(command, textIO, commandSuggester)
+                }
             }
             else {
                 val suggestions = commandSuggester.suggest(commandKey, 1)

@@ -16,6 +16,7 @@ class CommandSuggester(dictionaryPath: String) {
         //index the dictionary
         sp.stringDistance = NGramDistance()
         sp.indexDictionary(PlainTextDictionary(Paths.get(dictionaryPath)), IndexWriterConfig(), true)
+        sp.accuracy = 0.3f
     }
 
     fun suggest(keyword: String, suggestionNumber: Int = 1): Array<String> {

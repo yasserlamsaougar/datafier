@@ -8,4 +8,6 @@ interface Command : Indexable {
     val treeDefinition: DefinitionTree
 
     fun launch(command: String, textIO: TextIO, suggester: CommandSuggester)
+
+    fun launchInteractive(command: String, textIO: TextIO)
 }

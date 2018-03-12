@@ -1,37 +1,165 @@
 {
   "definitions": {
-    "address": {
+    "s_addr_per": {
       "attributes": {
         "row_id": "regex.id_cloe",
+        "country": "faker.country",
         "city": "faker.city",
-        "building": "faker.building",
-        "postal_code": "faker.zip_code",
-        "address": "faker.street"
+        "zipcode": "faker.zip_code",
+        "landlord_name": "faker.landlord",
+        "addr": "faker.full_address"
       },
       "constants": {
-        "URN": "S_ADDR_PER"
+        "URN": "IDR~CLOE~SIEBEL_S_ADDR_PER"
       }
     },
-    "account": {
+    "s_org_ext": {
+      "attributes": {
+        "branch_type_cd": "",
+        "pr_addr_id": "regex.id_cloe",
+        "created": "faker.date",
+        "par_row_id": "regex.id_cloe",
+        "cust_stat_cd": "",
+        "desc_text": "",
+        "main_fax_ph_num": "faker.phone",
+        "main_ph_num": "faker.phone",
+        "name": "",
+        "row_id": "regex.id_cloe",
+        "url": "",
+        "vat_regn_num": "regex.siren",
+        "x_activite_site_2": "",
+        "x_capital_social": "",
+        "x_cessation_flg": "",
+        "x_dt_ech_fran": "",
+        "x_dt_eff_fran": "",
+        "x_enquete_satisfaction": "",
+        "x_enseigne": "",
+        "x_imp_budget": "",
+        "x_marquage": "",
+        "x_mont_fran": "",
+        "x_niveau": "enum.account_level",
+        "x_num_cert_fran": "",
+        "x_numero_rcs": "",
+        "x_ref_accord_cadre_flotte": "",
+        "x_ref_client": "",
+        "x_role": "",
+        "x_segment_marktg_sectoriel": "",
+        "x_sice_reference": "",
+        "x_ss_typ_col_loc": "",
+        "x_supprime_flg": "",
+        "x_tva_spe": "",
+        "x_typ_col_loc": "",
+        "x_ville_rcs": "",
+        "cmpt_flg": ""
+      },
+      "constants": {
+        "URN": "IDR~CLOE~SIEBEL_S_ORG_EXT"
+      }
+    },
+    "s_org_ext_x": {
       "attributes": {
         "row_id": "regex.id_cloe",
-        "par_addr_id": "regex.id_cloe",
-        "x_niveau": "enum.account_level"
+        "x_mandat_id": "regex.id_cloe",
+        "x_code_vip": "enum.account_level",
+        "x_bodacc_dt": "",
+        "x_risque_liquidation": "",
+        "x_migration_dt": "",
+        "x_fin_proc_collective_dt": "",
+        "x_date_parution_bodacc_dt": "",
+        "x_jour_prelevement": "",
+        "x_delai_reglement": "",
+        "x_interposition": "",
+        "x_mode_delai_paiement": "",
+        "x_moyen_paiement": "",
+        "x_nat_proc_coll": "",
+        "x_parcours_ice": "",
+        "x_prio_relance": "",
+        "x_raison_sociale": "",
+        "x_ref_interposant": "",
+        "x_ref_doc_proc_collective": "",
+        "X_PERIOD_FACTU_SITES": "",
+        "X_STATUT_AUD": ""
+      },
+      "constants": {
+        "URN": "IDR~CLOE~SIEBEL_S_ORG_EXT_X"
+      }
+    },
+    "s_org_ext_fnx": {
+      "attributes": {
+        "row_id": "regex.id_cloe",
+        "mrkt_cap_pref_cd": "enum.operational_segment",
+        "ann_rev": "faker.number"
+      },
+      "constants": {
+        "URN": "S_ORG_EXT_FNX"
+      }
+    },
+    "cx_mandat": {
+      "attributes": {
+        "row_id": "regex.id_cloe",
+        "x_iban": "faker.iban",
+        "x_niveau": "regex.rum"
+      },
+      "constants": {
+        "URN": "IDR~CLOE~SIEBEL_CX_MANDAT"
+      }
+    },
+    "s_evt_act": {
+      "attributes": {
+        "row_id": "regex.id_cloe",
+        "x_num_affaire": "regex.id_cloe",
+        "todo_cd_old": "regex.id_cloe",
+        "x_visible_internaute": "enum.boolean",
+        "caller_type_cd": "",
+        "created": "faker.date",
+        "target_ou_id": "regex.id_cloe"
+      },
+      "constants": {
+        "URN": "IDR~CLOE~SIEBEL_S_EVT_ACT"
       }
     }
   },
   "groups": {
+    "s_org_ext_fnx": {
+      "objects": {
+        "s_org_ext_fnx": {
+          "count": 1,
+          "mandatory": true
+        }
+      }
+    },
     "account": {
       "objects": {
-        "address": {
-          "count": 1
+        "s_addr_per": {
+          "count": 1,
+          "mandatory": true
         },
-        "account": {
-          "count": 1
+        "s_org_ext": {
+          "count": 1,
+          "mandatory": true
+        },
+        "s_org_ext_x": {
+          "count": 1,
+          "mandatory": true
+        },
+        "s_org_ext_fnx": {
+          "count": 1,
+          "mandatory": true
+        },
+        "cx_mandat": {
+          "count": 1,
+          "mandatory": true
+        },
+        "s_evt_act": {
+          "count": 1000
         }
       },
       "overrides": {
-        "address.row_id": "account.par_addr_id"
+        "s_addr_per.row_id": "s_org_ext.pr_addr_id",
+        "s_org_ext_x.row_id": "s_org_ext.row_id",
+        "s_org_ext_fnx.row_id": "s_org_ext.row_id",
+        "s_evt_act.target_ou_id": "s_org_ext.par_row_id",
+        "cx_mandat.row_id": "s_org_ext_x.x_mandat_id"
       }
     }
   }
