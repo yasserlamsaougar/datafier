@@ -43,8 +43,8 @@ A simple object has a name and a list of attributes which are formats used to ge
 So far three generator types exist [faker,regex,enum] 
 
 `"building": "faker.building"` will generate a random building number
-`"row_id": "regex.id_cloe"` will generate a random id based on hard-coded regex
-`"x_niveau": "enum.account_level"` will generate a random level based on a hard coded list of value 
+`"row_id": "regex.id_cloe"` will generate a random id based on regex located in the regex configuration file
+`"x_niveau": "enum.account_level"` will generate a random level based on a list of value located in the enum configuration file
 
 A group is a collection of simple objects and in the future other groups that can be connected together via 
 the overrides property. In this example we're saying that the row_id property of address should be the same as par_addr_id of the account.

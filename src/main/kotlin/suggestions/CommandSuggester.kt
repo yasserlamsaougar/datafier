@@ -7,7 +7,7 @@ import org.apache.lucene.search.spell.SpellChecker
 import org.apache.lucene.store.FSDirectory
 import java.nio.file.Paths
 
-class CommandSuggestor(dictionaryPath: String) {
+class CommandSuggester(dictionaryPath: String) {
 
     //spell checker instantiation
     val sp = SpellChecker(FSDirectory.open(Paths.get("directory")))

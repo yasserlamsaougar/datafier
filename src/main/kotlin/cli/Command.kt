@@ -2,11 +2,10 @@ package cli
 
 import model.Definitions.DefinitionTree
 import org.beryx.textio.TextIO
-import suggestions.CommandSuggestor
+import suggestions.CommandSuggester
 
 interface Command : Indexable {
     val treeDefinition: DefinitionTree
-    val suggestor: CommandSuggestor
 
-    fun launch(command: String, textIO: TextIO)
+    fun launch(command: String, textIO: TextIO, suggester: CommandSuggester)
 }

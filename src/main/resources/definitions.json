@@ -7,6 +7,9 @@
         "building": "faker.building",
         "postal_code": "faker.zip_code",
         "address": "faker.street"
+      },
+      "constants": {
+        "URN": "S_ADDR_PER"
       }
     },
     "account": {

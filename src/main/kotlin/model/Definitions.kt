@@ -1,6 +1,6 @@
 package model
 class Definitions {
-    data class Definition(val attributes: Map<String, String> = emptyMap())
+    data class Definition(val attributes: Map<String, String> = emptyMap(), val constants: Map<String, String> = emptyMap())
 
     data class GroupObject(val count: Int = 1, val mandatory: Boolean = false)
 

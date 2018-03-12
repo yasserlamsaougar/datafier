@@ -17,7 +17,7 @@ object CombinationUtils {
 
     private fun generatePermutations(lists: Array<Collection<String>>, depth: Int, currentItem: String, permutationCallback: (String) -> Unit) {
         if (depth == lists.size) {
-            permutationCallback(currentItem)
+            permutationCallback(currentItem.trim())
         } else {
             val nextDepth = depth + 1
             lists[depth].forEach {
